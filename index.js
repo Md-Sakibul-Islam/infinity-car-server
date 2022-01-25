@@ -21,6 +21,36 @@ async function run() {
     await client.connect();
     const database = client.db("infinity_car");
     const carCollection = database.collection("car_collection");
+    const usersCollection = database.collection("users_collection");
+    const ordersCollection = database.collection("orders_collection");
+
+    // POST API
+    // post api for users
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const doc = {
+        name: user.name,
+        email: user.email,
+      };
+      const result = await usersCollection.insertOne(doc);
+      res.json(result);
+    });
+
+    // POST API
+    // order post api
+    app.post("/orders", async (req, res) => {
+      const order = req.body;
+      const doc = {
+        name: order.name,
+        email: order.email,
+        phone: order.phone,
+        address: order.address,
+      };
+
+      const result = await ordersCollection.insertOne(doc);
+      res.json(result);
+    });
 
     // GET API
     // getting all products here
