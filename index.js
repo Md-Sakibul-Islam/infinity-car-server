@@ -23,9 +23,10 @@ async function run() {
     const carCollection = database.collection("car_collection");
     const usersCollection = database.collection("users_collection");
     const ordersCollection = database.collection("orders_collection");
+    const reviewCollection = database.collection("review_collection");
 
     // POST API
-    // post api for users
+    // post api for users info save to database
 
     app.post("/users", async (req, res) => {
       const user = req.body;
@@ -36,7 +37,54 @@ async function run() {
       const result = await usersCollection.insertOne(doc);
       res.json(result);
     });
-
+    // put api for user admin role
+    app.put("/users", async (req, res) => {
+      const admin = req.body;
+      const filter = { email: admin.email };
+      // this option instructs the method to create a document if no documents match the filter
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          role: "admin",
+        },
+      };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
+    // get api for admin role
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = {email:email}
+      const user = await usersCollection.findOne(query);
+      let isAdmin = false;
+      if(user?.role === 'admin'){
+          isAdmin=true;
+      }
+      
+      res.json({admin:isAdmin});
+    });
+    // Post api
+    // review post api
+    app.post("/review", async (req, res) => {
+      const feedback = req.body;
+      const doc = {
+        name: feedback.name,
+        message: feedback.message,
+        rating: feedback.rating,
+      };
+      const result = await reviewCollection.insertOne(doc);
+      res.json(result);
+    });
+    // get api
+    app.get("/review", async (req, res) => {
+      const cursor = reviewCollection.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
     // POST API
     // order post api
     app.post("/orders", async (req, res) => {
