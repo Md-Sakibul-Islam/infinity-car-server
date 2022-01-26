@@ -43,6 +43,7 @@ async function run() {
       const order = req.body;
       const doc = {
         name: order.name,
+        productName: order.productName,
         email: order.email,
         phone: order.phone,
         address: order.address,
@@ -52,6 +53,23 @@ async function run() {
       res.json(result);
     });
 
+    // order get api
+    // My orders get api
+
+    app.get("/orders", async (req, res) => {
+      const email = req.query.email;
+      const filter = { email: email };
+      const cursor = ordersCollection.find(filter);
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+    // order delete api
+    app.delete("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await ordersCollection.deleteOne(filter);
+      res.send(result);
+    });
     // GET API
     // getting all products here
     app.get("/products", async (req, res) => {
