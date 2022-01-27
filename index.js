@@ -58,14 +58,14 @@ async function run() {
     // get api for admin role
     app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
-      const query = {email:email}
+      const query = { email: email };
       const user = await usersCollection.findOne(query);
       let isAdmin = false;
-      if(user?.role === 'admin'){
-          isAdmin=true;
+      if (user?.role === "admin") {
+        isAdmin = true;
       }
-      
-      res.json({admin:isAdmin});
+
+      res.json({ admin: isAdmin });
     });
     // Post api
     // review post api
@@ -101,6 +101,20 @@ async function run() {
       res.json(result);
     });
 
+    // all orders get api
+    app.get("/allorders", async (req, res) => {
+      const cursor = ordersCollection.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+    // delete api for all orders
+
+    app.delete("/allorders/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await ordersCollection.deleteOne(filter);
+      res.send(result);
+    });
     // order get api
     // My orders get api
 
@@ -116,6 +130,19 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const result = await ordersCollection.deleteOne(filter);
+      res.send(result);
+    });
+    // Post api
+    //
+    app.post("/products", async (req, res) => {
+      const product = req.body;
+      const doc = {
+        img: product.img,
+        name: product.name,
+        describe: product.describe,
+        price: product.price,
+      };
+      const result = await carCollection.insertOne(doc);
       res.send(result);
     });
     // GET API
