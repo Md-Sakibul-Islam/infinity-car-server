@@ -162,6 +162,14 @@ async function run() {
       const result = await carCollection.findOne(query);
       res.json(result);
     });
+
+    // delete api 
+    app.delete("/products/:id",async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id:ObjectId(id)}
+      const result = await carCollection.deleteOne(query);
+      res.json(result)
+    })
   } finally {
     //   await client.close();
   }
