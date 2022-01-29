@@ -2,6 +2,9 @@
 
 https://infinity-car-d7c25.web.app/
 ___
+### Default Admin
+- User Email: admin@admin.com
+- User Password: 123456
 
 ## Features
 - Infinity Car's website home page has a header (simple navbar), Banner (carousel), About, Car Section, Review, Blog, and Footer.
